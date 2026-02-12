@@ -212,7 +212,7 @@
     .work-info h3{font-size:20px;font-weight:700;color:#fff;}
 
     /* ── TESTIMONIALS ────────────────────────────────────────── */
-    .testimonials-section{padding:140px 8%;text-align:center;}
+    .testimonials-section{padding:140px 8%;text-align:center;padding-top:200px;}
     .testimonial-title{font-size:52px;font-weight:800;margin-bottom:60px;}
     .testimonial-title span{
       background:linear-gradient(90deg,#00d4ff,#7b61ff);
@@ -467,3 +467,4 @@
       .about-content h2{font-size:20px;}
       .about-images{height:200px;}
     }
+
