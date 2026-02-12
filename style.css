@@ -736,3 +736,148 @@ footer p { color:var(--muted); font-size:13px; }
   .stats-bar { grid-template-columns: 1fr 1fr; }
   .about-features { font-size: 14px; }
 }
+
+/* ============================================================
+   RESPONSIVE FIX — Add this to the END of your existing CSS
+   ============================================================ */
+
+/* Stats grid fix */
+.stats {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  text-align: center;
+}
+
+/* ---- Tablet (≤ 1024px) ---- */
+@media (max-width: 1024px) {
+  .hero        { padding: 140px 5% 100px; }
+  .services, .portfolio, .about,
+  .testimonials, .contact, .featured-work { padding: 90px 5%; }
+  .about-grid  { gap: 50px; }
+  .about-images{ height: 420px; }
+  .contact-grid{ gap: 50px; }
+}
+
+/* ---- Tablet portrait / large mobile (≤ 768px) ---- */
+@media (max-width: 768px) {
+
+  /* Hide desktop nav, show hamburger */
+  .nav-links  { display: none !important; }
+  .btn-secondary.nav-btn { display: none !important; }
+
+  /* Hamburger button */
+  .hamburger {
+    display: flex !important;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+    border: none;
+    background: transparent;
+    z-index: 1100;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px; height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile menu overlay */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(11,15,20,0.97);
+    backdrop-filter: blur(20px);
+    z-index: 999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-size: 26px;
+    font-weight: 700;
+    color: #9aa4b2;
+    padding: 12px 0;
+  }
+  .mobile-menu a:hover { color: #00d4ff; }
+
+  /* Hero */
+  .hero { padding: 120px 5% 80px; }
+  .hero h1 { font-size: clamp(32px, 9vw, 50px); }
+  .subtext  { font-size: 15px; }
+  .hero-buttons, .hero > div { flex-direction: column; align-items: center; }
+  .btn-primary, .btn-secondary { width: 100%; max-width: 300px; text-align: center; justify-content: center; }
+
+  /* Stats — 2 columns */
+  .stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 28px;
+    padding: 40px 5%;
+  }
+
+  /* Services */
+  .service-grid { grid-template-columns: 1fr !important; }
+
+  /* About */
+  .about        { flex-direction: column !important; gap: 40px; }
+  .about-images { width: 100% !important; min-width: unset !important; height: 300px !important; }
+  .about-text   { flex: unset !important; width: 100%; }
+  .checks       { grid-template-columns: 1fr !important; }
+  .about-stats  { gap: 20px; }
+
+  /* Portfolio */
+  .portfolio-grid { grid-template-columns: 1fr !important; }
+
+  /* Testimonial */
+  .testimonial { padding: 30px 20px !important; }
+
+  /* Contact */
+  .contact      { flex-direction: column !important; gap: 40px; }
+  .contact-form { width: 100% !important; }
+  .form-row     { flex-direction: column !important; gap: 14px; }
+
+  /* Footer */
+  footer {
+    flex-direction: column !important;
+    text-align: center;
+  }
+}
+
+/* ---- Mobile (≤ 480px) ---- */
+@media (max-width: 480px) {
+  .navbar { padding: 0 5%; height: 64px; }
+  .hero   { padding: 100px 5% 60px; }
+
+  .stats {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px;
+    padding: 28px 5%;
+  }
+  .stats h2 { font-size: 28px !important; }
+
+  .service-grid  { gap: 16px; }
+  .card          { padding: 22px; }
+
+  .about-images  { height: 240px !important; }
+
+  .work-grid, .portfolio-grid { grid-template-columns: 1fr !important; }
+
+  .btn-primary, .btn-secondary { font-size: 14px; padding: 12px 20px; }
+}
+
+/* ---- Very small (≤ 360px) ---- */
+@media (max-width: 360px) {
+  .hero h1      { font-size: 28px; }
+  .stats        { grid-template-columns: 1fr 1fr !important; }
+}
+
