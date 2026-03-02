@@ -7,16 +7,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- EmailJS -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-D59X0DDV9W"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-D59X0DDV9W');
   </script>
- 
 </head>
 <body>
 
@@ -26,7 +26,6 @@
 <nav class="navbar">
   <div class="logo">
     <div class="logo-box">
-      <!-- Replace src with your actual logo image path -->
       <img src="logo.jpeg" alt="Ascend Technologies" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
       <span style="display:none;color:#00d4ff;font-size:16px;font-weight:800;">ASCEND</span>
     </div>
@@ -317,20 +316,20 @@
       <div class="form-row">
         <div class="form-group">
           <label>First Name</label>
-          <input type="text" placeholder="John" />
+          <input type="text" id="firstName" placeholder="John" />
         </div>
         <div class="form-group">
           <label>Last Name</label>
-          <input type="text" placeholder="Doe" />
+          <input type="text" id="lastName" placeholder="Doe" />
         </div>
       </div>
       <div class="form-group form-mb">
         <label>Email</label>
-        <input type="email" placeholder="john@example.com" />
+        <input type="email" id="userEmail" placeholder="john@example.com" />
       </div>
       <div class="form-group form-mb">
         <label>Service Needed</label>
-        <select>
+        <select id="serviceNeeded">
           <option value="">Select a service…</option>
           <option>Web Development</option>
           <option>UI/UX Design</option>
@@ -342,9 +341,10 @@
       </div>
       <div class="form-group form-mb">
         <label>Message</label>
-        <textarea placeholder="Tell us about your project…"></textarea>
+        <textarea id="userMessage" placeholder="Tell us about your project…"></textarea>
       </div>
-      <button class="btn-primary full">Send Message ✈</button>
+      <button class="btn-primary full" id="submitBtn" onclick="sendEmail()">Send Message ✈</button>
+      <div id="formStatus" style="margin-top:12px;text-align:center;font-size:14px;font-weight:500;display:none;"></div>
     </div>
 
   </div>
@@ -370,6 +370,68 @@
      JAVASCRIPT
 ═══════════════════════════════════════════════════ -->
 <script>
+  /* ── EmailJS Init ── */
+  (function(){
+    emailjs.init("WXSdn0lgryC1F08C8");
+  })();
+
+  function sendEmail() {
+    const firstName   = document.getElementById('firstName').value.trim();
+    const lastName    = document.getElementById('lastName').value.trim();
+    const userEmail   = document.getElementById('userEmail').value.trim();
+    const service     = document.getElementById('serviceNeeded').value;
+    const userMessage = document.getElementById('userMessage').value.trim();
+    const statusEl    = document.getElementById('formStatus');
+    const submitBtn   = document.getElementById('submitBtn');
+
+    // Basic validation
+    if (!firstName || !userEmail || !userMessage) {
+      statusEl.style.display = 'block';
+      statusEl.style.color   = '#ff6b6b';
+      statusEl.textContent   = '⚠ Please fill in First Name, Email, and Message.';
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userEmail)) {
+      statusEl.style.display = 'block';
+      statusEl.style.color   = '#ff6b6b';
+      statusEl.textContent   = '⚠ Please enter a valid email address.';
+      return;
+    }
+
+    submitBtn.disabled     = true;
+    submitBtn.textContent  = 'Sending…';
+    statusEl.style.display = 'none';
+
+    const templateParams = {
+      from_name  : firstName + ' ' + lastName,
+      from_email : userEmail,
+      service    : service || 'Not specified',
+      message    : userMessage,
+      to_email   : 'ascendtechnologies.online@gmail.com'
+    };
+
+    emailjs.send("service_m1qt13b", "template_jg4zyk7", templateParams)
+    .then(function() {
+      statusEl.style.display = 'block';
+      statusEl.style.color   = '#00d4ff';
+      statusEl.textContent   = '✅ Message sent! We\'ll get back to you soon.';
+      submitBtn.disabled     = false;
+      submitBtn.textContent  = 'Send Message ✈';
+      document.getElementById('firstName').value     = '';
+      document.getElementById('lastName').value      = '';
+      document.getElementById('userEmail').value     = '';
+      document.getElementById('serviceNeeded').value = '';
+      document.getElementById('userMessage').value   = '';
+    }, function(error) {
+      statusEl.style.display = 'block';
+      statusEl.style.color   = '#ff6b6b';
+      statusEl.textContent   = '❌ Failed to send. Please try again or email us directly.';
+      submitBtn.disabled     = false;
+      submitBtn.textContent  = 'Send Message ✈';
+      console.error('EmailJS error:', error);
+    });
+  }
+
   /* ── Show Get Started button in navbar on desktop ── */
   function updateNavCta() {
     const cta = document.getElementById('navCta');
@@ -438,9 +500,9 @@
     current = (index + testimonials.length) % testimonials.length;
     const t = testimonials[current];
     document.getElementById('testimonialText').textContent = t.text;
-    document.getElementById('clientName').textContent     = t.name;
-    document.getElementById('clientRole').textContent     = t.role;
-    document.getElementById('clientAvatar').textContent   = t.initial;
+    document.getElementById('clientName').textContent      = t.name;
+    document.getElementById('clientRole').textContent      = t.role;
+    document.getElementById('clientAvatar').textContent    = t.initial;
     document.querySelectorAll('.dot').forEach((d, i) => {
       d.classList.toggle('active', i === current);
     });
@@ -456,15 +518,15 @@
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
-        e.target.style.opacity    = '1';
-        e.target.style.transform  = 'translateY(0)';
+        e.target.style.opacity   = '1';
+        e.target.style.transform = 'translateY(0)';
       }
     });
   }, { threshold: 0.1 });
 
   fadeEls.forEach(el => {
-    el.style.opacity   = '0';
-    el.style.transform = 'translateY(20px)';
+    el.style.opacity    = '0';
+    el.style.transform  = 'translateY(20px)';
     el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     observer.observe(el);
   });
@@ -472,12 +534,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
